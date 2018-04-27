@@ -1,0 +1,8 @@
+DATA
+.DS_Store
+.idea
+__pycache__
+./*/DATA
+./*/.DS_Store
+./*/.idea
+./*/__pycache__
