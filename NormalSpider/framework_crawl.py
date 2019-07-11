@@ -1,71 +1,74 @@
-# !/usr/bin/env python
-# coding=UTF-8
+# coding=utf-8
+'''抓取模块'''
 
 import requests
 
 
 class Crawl(object):
+    """
+    抓取模块，对提供的url进行抓取并返回获取的页面content
+    crawl_by_get 使用get请求方式获取页面内容
+    crawl_by_post 使用post请求方式获取页面内容
+    """
+
     def __init__(self):
+        """
+        初始化方法
+        """
         self.session = requests.Session()
 
-    def crawl_get_content(self, url, usesession=True, **kw):
+    def crawl_by_get(self, url, **kw):
         """
-        get请求页面，并返回content,请使用params,proxies,timeout,pagecode, headers命名参数
-        :param url: 请求地址
-        :param usesession: 使用session标识，默认True
-        :param kw: 关键字参数
-        :return: 页面的content
+        使用requests使用get方法获取页面content
+        :param url:
+        :param kw:
+        :return:
         """
-
-        retry = 5  # 重试次数
-        response = 'no_data'
+        retry = kw.get('retry', 5)
+        res = None
         while retry:
             retry -= 1
             try:
-                if usesession:  # 使用session请求
-                    res = self.session.get(url, params=kw.get('params', ''), headers=kw.get('headers', ''),
-                                           proxies=kw.get('proxies', ''), timeout=kw.get('timeout', 30))
-                else:  # 不使用session请求
-                    res = requests.get(url, params=kw.get('params', ''), headers=kw.get('headers', ''),
-                                       proxies=kw.get('proxies', ''), timeout=kw.get('timeout', 30))
-                if res.status_code == 200:  # 状态码为200则立刻终止，否则重试
-                    response = res.content.decode(kw.get('pagecode', 'UTF-8'))
+                response = self.session.get(url, headers=kw.get('headers'), params=kw.get('params'),
+                                            proxies=kw.get('proxies'), timeout=kw.get('timeout', 30))
+                if response.status_code in [200, 404]:
+                    res = response.content.decode(kw.get('pagecode', 'utf-8'))
                     break
                 else:
                     continue
+            except UnicodeError as e:
+                print(e)
+                kw['pagecode'] = 'gbk'
+                continue
             except Exception as e:
-                print('[requests page error] %s' % e)
+                print(e)
                 continue
 
-        return response
+        return res
 
-    def crawl_post_content(self, url, usesession=True, **kw):
+    def crawl_by_post(self, url, **kw):
         """
-        post请求页面，并返回content，请使用data,proxies,timeout,pagecode, headers命名参数
-        :param url: 请求地址
-        :param usesession: 使用session请求，默认为True
-        :param kw: 关键字参数
-        :return: 返回页面content
+        使用requests使用post方法获取页面content
+        :param url:
+        :param kw:
+        :return:
         """
-
-        retry = 5
-        response = 'no_data'
+        retry = kw.get('retry', 5)
+        res = None
         while retry:
             retry -= 1
             try:
-                if usesession:
-                    res = self.session.post(url, data=kw.get('params', ''), headers=kw.get('headers', ''),
-                                           proxies=kw.get('proxies', ''), timeout=kw.get('timeout', 30))
-                else:
-                    res = requests.post(url, data=kw.get('params', ''), headers=kw.get('headers', ''),
-                                       proxies=kw.get('proxies', ''), timeout=kw.get('timeout', 30))
-                if res.status_code == 200:
-                    response = res.content.decode(kw.get('pagecode', 'UTF-8'))
+                response = self.session.post(url, headers=kw.get('headers'), data=kw.get('data'),
+                                             proxies=kw.get('proxies'), timeout=kw.get('timeout', 30))
+                if response.status_code in [200, 404]:
+                    res = response.content.decode(kw.get('pagecode', 'utf-8'))
                     break
                 else:
                     continue
-            except Exception as e:
-                print('[requests page error] %s' % e)
+            except UnicodeError:
+                kw['pagecode'] = 'gbk'
+                continue
+            except Exception:
                 continue
 
-        return response
+        return res

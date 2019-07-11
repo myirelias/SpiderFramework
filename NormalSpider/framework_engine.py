@@ -3,8 +3,8 @@
 
 import time
 from framework_crawl import Crawl
-from framework_spider import Spider
-from framework_pipe import Pipe
+from framework_analysis import Spider
+from framework_pipeline import Pipe
 from framework_setting import XPATHER_HREF
 
 
