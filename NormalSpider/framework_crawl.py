@@ -3,7 +3,6 @@
 
 import requests
 
-
 class Crawl(object):
     """
     抓取模块，对提供的url进行抓取并返回获取的页面content

@@ -21,7 +21,7 @@ class Pipeline(object):
     """
 
     def __init__(self):
-        # self.conn = MongoClient(setting.HOST, 27017)
+        # self.conn = MongoClient(host=mongo_host, port=mongo_port)
         self.path = os.path.join(os.path.abspath('DATA'), '{}')
         self._pipe_create_data()
 

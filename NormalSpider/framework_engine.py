@@ -2,18 +2,21 @@
 # coding=UTF-8
 
 import time
+from configparser import ConfigParser
+
 from framework_crawl import Crawl
-from framework_analysis import Spider
-from framework_pipeline import Pipe
-from framework_setting import XPATHER_HREF
+from framework_analysis import Analysis
+from framework_pipeline import Pipeline
 
+setting_file = './framework_setting.conf'
 
-class Engine(object):
+class Engine:
 
     def __init__(self):
         self.crawl = Crawl()
-        self.spider = Spider()
-        self.pipe = Pipe()
+        self.pipe = Pipeline()
+        self.analysis = Analysis()
+        self.conf = self._engine_load_config()
 
     def _engine_demo(self):
         """
@@ -21,21 +24,18 @@ class Engine(object):
         :return:
         """
 
-        url = 'http://news.baidu.com'
-        content = self.crawl.crawl_get_content(url, usesession=False, timeout=1)  # 请求页面
-        data = self.spider.spider_content_data(content=content, xpather=XPATHER_HREF)  # 解析页面
-        saveinfo = []
-        for eachdata in data:
-            self.pipe.pipe_save_txt(eachdata, 'baidunewslink.txt', savetype='a')  # 存数据到txt文本
-            savedict = {'url': eachdata}
-            saveinfo.append(savedict)
-        txtcontent = self.pipe.pipe_read_txt('baidunewslink.txt')  # 读取txt中的数据
-        res = self.pipe.pipe_save_db(saveinfo, 'db_baidunew', 'col_newslink')  # 存储数据到mongodb
-        print(res)
-        cursor = self.pipe.pipe_read_db('db_baidunew', 'col_newslink')  # 读取mongodb中的数据
-        for each in cursor:
-            print(each)
-        print(txtcontent)
+        print('test sucess!')
+
+    @staticmethod
+    def _engine_load_config():
+        """
+        加载配置文件
+        :return:
+        """
+        conf = ConfigParser()
+        conf.read(setting_file, encoding='utf-8')
+        return conf
+
 
     def excute(self):
         self._engine_demo()
@@ -46,4 +46,4 @@ if __name__ == '__main__':
     proc = Engine()
     proc.excute()
     end = time.time()
-    print('[%.1f s] script finish ' % (end - start))
+    print('{:.1f}s script finish '.format(end - start))
