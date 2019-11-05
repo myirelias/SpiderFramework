@@ -2,12 +2,15 @@
 # coding=UTF-8
 
 import time
+import logging
 from configparser import ConfigParser
 
 from framework_crawl import Crawl
 from framework_analysis import Analysis
 from framework_pipeline import Pipeline
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s--%(lineno)s--%(name)s: %(message)s",
+                    filename="logfile.log", filemode="a", )
 setting_file = './framework_setting.conf'
 
 class Engine:
