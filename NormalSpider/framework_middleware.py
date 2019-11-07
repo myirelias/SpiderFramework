@@ -173,3 +173,26 @@ class BloomFilter(object):
             loc = f.hash(str_input)
 
             self.server.setbit(name, loc, 1)
+
+
+class ProxyMiddleware:
+    """
+    代理中间件
+    """
+
+    def __init__(self, proxy_params):
+        self.proxy_params = proxy_params
+
+    def http_sockets(self):
+        """
+        渠道
+        :return:
+        """
+        return
+
+
+class LoggingMiddleware:
+    """
+    日志中间件
+    """
+    ...
