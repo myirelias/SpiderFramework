@@ -2,16 +2,14 @@
 # coding=UTF-8
 
 import time
-import logging
 from configparser import ConfigParser
 
 from framework_crawl import Crawl
 from framework_analysis import Analysis
 from framework_pipeline import Pipeline
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s--%(lineno)s--%(name)s: %(message)s",
-                    filename="logfile.log", filemode="a", )
 setting_file = './framework_setting.conf'
+
 
 class Engine:
 
@@ -23,7 +21,7 @@ class Engine:
 
     def _engine_demo(self):
         """
-        一个测试demo，爬取的是百度新闻，随便写了个xpath获取了一些链接
+        一个测试demo
         :return:
         """
 
@@ -38,7 +36,6 @@ class Engine:
         conf = ConfigParser()
         conf.read(setting_file, encoding='utf-8')
         return conf
-
 
     def excute(self):
         self._engine_demo()
